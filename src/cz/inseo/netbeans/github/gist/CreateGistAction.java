@@ -1,5 +1,6 @@
 package cz.inseo.netbeans.github.gist;
 
+import cz.inseo.netbeans.github.tools.InfoDialog;
 import java.awt.Frame;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
@@ -22,75 +23,85 @@ id = "cz.inseo.netbeans.github.gist.CreateGistAction")
 @ActionRegistration(iconBase = "cz/inseo/netbeans/github/resources/images/g-icon.png",
 displayName = "#CreateGistDialog.title")
 @ActionReferences({
-	@ActionReference(path = "Editors/Popup", position = 4040, separatorBefore = 4035, separatorAfter = 4045),
-	@ActionReference(path = "Menu/Edit", position = 1470, separatorBefore = 1455),
-	@ActionReference(path = "Toolbars/Clipboard", position = 400)
-	/*@ActionReference(path = "Loaders/Languages/Actions", position = 1150, separatorAfter = 1175),*/
-	
+        @ActionReference(path = "Editors/Popup", position = 4040, separatorBefore = 4035, separatorAfter = 4045),
+        @ActionReference(path = "Menu/Edit", position = 1470, separatorBefore = 1455),
+        @ActionReference(path = "Toolbars/Clipboard", position = 400)
+/*
+ * @ActionReference(path = "Loaders/Languages/Actions", position = 1150,
+ * separatorAfter = 1175),
+ */
 })
 public final class CreateGistAction extends EditAction {
 
-	@Override
-	protected void initialize() {
-		super.initialize();
-	}
+        @Override
+        protected void initialize() {
+                super.initialize();
+        }
 
-	@Override
-	protected int mode() {
-		return MODE_EXACTLY_ONE;
-	}
+        @Override
+        protected int mode() {
+                return MODE_EXACTLY_ONE;
+        }
 
-	@Override
-	protected Class<?>[] cookieClasses() {
-		return new Class[]{EditorCookie.class};
-	}
+        @Override
+        protected Class<?>[] cookieClasses() {
+                return new Class[]{EditorCookie.class};
+        }
 
-	@Override
-	protected void performAction(Node[] activatedNodes) {
-	
-		EditorCookie cookie = activatedNodes[0].getLookup().lookup(EditorCookie.class);
+        @Override
+        protected void performAction(Node[] activatedNodes) {
 
-		JTextComponent component = cookie.getOpenedPanes()[0];
+                EditorCookie cookie = activatedNodes[0].getLookup().lookup(EditorCookie.class);
 
-		final String mimeType = NbEditorUtilities.getMimeType(component);
-		final String displayName = activatedNodes[0].getDisplayName();
+                JTextComponent component = cookie.getOpenedPanes()[0];
 
-		final String text = component.getSelectedText();
-		if (text != null && !text.isEmpty()) {
-			RequestProcessor.getDefault().execute(new Runnable() {
+                final String mimeType = NbEditorUtilities.getMimeType(component);
+                final String displayName = activatedNodes[0].getDisplayName();
 
-				@Override
-				public void run() {
+                String t = component.getSelectedText();
+                if (t == null) {
+                        t = component.getText();
+                }
+                if (t.equals("") || t == null){
+                        InfoDialog.showError(NbBundle.getMessage(CreateGistAction.class, "MSG_NoData"));
+                        return;
+                }
+                final String text = t;
+                if (text != null && !text.isEmpty()) {
+                        RequestProcessor.getDefault().execute(new Runnable() {
 
-					SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
 
-						@Override
-						public void run() {
+                                        SwingUtilities.invokeLater(new Runnable() {
 
-							Frame f = WindowManager.getDefault().getMainWindow();
-							int x = f.getX() + f.getWidth() / 2;
-							int y = f.getY() + f.getHeight() / 2;
-							CreateGistDialog dialog = new CreateGistDialog(f, true);
-							dialog.setLocation(x, y);
+                                                @Override
+                                                public void run() {
 
-							dialog.setFile(displayName, text, mimeType);
+                                                        Frame f = WindowManager.getDefault().getMainWindow();
+                                                        int x = f.getX() + f.getWidth() / 2;
+                                                        int y = f.getY() + f.getHeight() / 2;
+                                                        CreateGistDialog dialog = new CreateGistDialog(f, true);
+                                                        dialog.setLocation(x, y);
+
+                                                        dialog.setFile(displayName, text, mimeType);
 
 
-							dialog.setVisible(true);
-						}
-					});
-				}
-			});
-		}
-	}
+                                                        dialog.setVisible(true);
+                                                }
+                                        });
+                                }
+                        });
+                }
+        }
 
-	@Override
-	public String getName() {
-		return NbBundle.getMessage(CreateGistAction.class, "CreateGistDialog.title");
-	}
+        @Override
+        public String getName() {
+                return NbBundle.getMessage(CreateGistAction.class, "CreateGistDialog.title");
+        }
 
-	@Override
-	public HelpCtx getHelpCtx() {
-		return HelpCtx.DEFAULT_HELP;
-	}
+        @Override
+        public HelpCtx getHelpCtx() {
+                return HelpCtx.DEFAULT_HELP;
+        }
 }
