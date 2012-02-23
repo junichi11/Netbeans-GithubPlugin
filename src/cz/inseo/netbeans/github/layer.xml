@@ -10,4 +10,27 @@
 		</folder>
 	</folder>
 	<attr name="Editors\Popup\cz-inseo-netbeans-github-CreateGistAction.instance\position" intvalue="4040"/>
+	<attr name="Editors\Popup\cz-inseo-netbeans-github-UpdateGistAction.instance\position" intvalue="4050"/>
+        <folder name="Actions">
+                <folder name="Edit">
+                        <file name="cz-inseo-netbeans-github-gist-CreateGistAction.instance">
+                                <attr
+                                        bundlevalue="cz.inseo.netbeans.github.gist.Bundle#CreateGistDialog.title" name="displayName"/>
+                                <attr
+                                        methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                                <attr name="delegate" newvalue="cz.inseo.netbeans.github.gist.CreateGistAction"/>
+                                <attr name="iconBase" stringvalue="cz/inseo/netbeans/github/resources/images/new_file.png"/>
+                                <attr boolvalue="false" name="noIconInMenu"/>
+                        </file>
+                        <file name="cz-inseo-netbeans-github-gist-UpdateGistAction.instance">
+                                <attr
+                                        bundlevalue="cz.inseo.netbeans.github.gist.Bundle#CTL_UpdateGistAction" name="displayName"/>
+                                <attr
+                                        methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                                <attr name="delegate" newvalue="cz.inseo.netbeans.github.gist.UpdateGistAction"/>
+                                <attr name="iconBase" stringvalue="cz/inseo/netbeans/github/resources/images/update.png"/>
+                                <attr boolvalue="false" name="noIconInMenu"/>
+                        </file>
+                </folder>
+        </folder>
 </filesystem>
